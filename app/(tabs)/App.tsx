@@ -87,7 +87,7 @@ export default function HomeScreen() {
             typeof latestReading.pH === 'number' &&
             typeof latestReading.tds === 'number' &&
             (latestReading.pH > 8 || latestReading.pH < 3 || 
-             latestReading.tds > 800) &&
+             latestReading.tds > 1000) &&
             !notified.current[key]
           ) {
             
@@ -117,7 +117,7 @@ export default function HomeScreen() {
       if (reading.pH > 8 || reading.pH < 3) {
         abnormalParams.push(`pH: ${reading.pH.toFixed(2)}`);
       }
-      if (reading.tds > 800) {
+      if (reading.tds > 1000) {
         abnormalParams.push(`TDS: ${reading.tds.toFixed(2)}`);
       }
 
@@ -151,7 +151,7 @@ export default function HomeScreen() {
 
         
         const isAbnormalPH = pH > 8 || pH < 3;
-        const isAbnormalTDS = tds > 800;
+        const isAbnormalTDS = tds > 1000;
         const hasAbnormalReading = isAbnormalPH || isAbnormalTDS;
 
         return (
