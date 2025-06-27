@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 
-// Configure notification behavior
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -41,12 +41,12 @@ export default function HomeScreen() {
   const [expoPushToken, setExpoPushToken] = useState<string | undefined>();
   const [notificationPermission, setNotificationPermission] = useState<string | undefined>();
 
-  // Register for push notifications
+  
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
   }, []);
 
-  // Request permission for notifications
+  
   useEffect(() => {
     if (Device.isDevice) {
       Notifications.requestPermissionsAsync().then(({ status }) => {
@@ -62,7 +62,7 @@ export default function HomeScreen() {
     }
   }, []);
 
-  // Fetch data from Firebase and trigger notifications
+  
   useEffect(() => {
     const sensorRef = ref(database);
     const unsubscribe = onValue(sensorRef, (snapshot) => {
@@ -81,7 +81,7 @@ export default function HomeScreen() {
           const latestReading = readings[latestTimestamp];
           const key = `${city}-${latestTimestamp}`;
 
-          // Check for abnormal water quality levels (pH and TDS only)
+          
           if (
             latestReading &&
             typeof latestReading.pH === 'number' &&
@@ -90,13 +90,13 @@ export default function HomeScreen() {
              latestReading.tds > 800) &&
             !notified.current[key]
           ) {
-            // Log that we detected an abnormal reading
+            
             console.log(`Abnormal water quality detected in ${city}: pH=${latestReading.pH}, TDS=${latestReading.tds}, Turbidity=${latestReading.turbidity}`);
             
-            // Send notification
+            
             sendWaterQualityNotification(city, latestReading);
             
-            // Mark this reading as notified to prevent duplicates
+           
             notified.current[key] = true;
           }
         });
@@ -109,10 +109,10 @@ export default function HomeScreen() {
     return () => unsubscribe();
   }, [notificationPermission, expoPushToken]);
 
-  // Function to send water quality notification
+  
   const sendWaterQualityNotification = async (city: string, reading: Reading) => {
     try {
-      // Determine which parameters are abnormal (pH and TDS only)
+      
       const abnormalParams = [];
       if (reading.pH > 8 || reading.pH < 3) {
         abnormalParams.push(`pH: ${reading.pH.toFixed(2)}`);
